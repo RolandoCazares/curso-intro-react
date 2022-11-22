@@ -1,9 +1,6 @@
 import React from "react";
-import { TodoCounter } from "./TodoCounter";
-import { TodoSearch } from "./TodoSearch";
-import { TodoList } from "./TodoList";
-import { TodoItem } from "./TodoItem";
-import { CreateTodoButton } from "./CreateTodoButton";
+import { AppUI } from "./AppUI";
+
 // import './App.css';
 
 const defaulttodos = [
@@ -21,7 +18,7 @@ function App() {
   /* //variable para contar cuantos todos se han completado y cuantos se tienene en total */
   /* //cada vez que los todos cambien o el searchvalue cambie se volvera a hacer la cuenta */
   /* // (!!todo.complete) == (todo.complete == true) length para contar cuantos se completaron */
-  const completeTodos = todos.filter((todo) => !!todo.completed).length;
+  const completedTodos = todos.filter((todo) => !!todo.completed).length;
   const totalTodos = todos.length;
 
   let searchedTodos = [];
@@ -36,22 +33,39 @@ function App() {
     });
   }
 
+  const completeTodo = (text) => {
+    const todoIndex = todos.findIndex((todo) => todo.text === text);
+
+    const newTodos = [...todos];
+    newTodos[todoIndex].completed = true;
+    setTodos(newTodos);
+    /* todos[todoIndex] = {
+      text: todos[todoIndex].text, 
+      completed: true,
+    } */
+  };
+
+  const deleteTodo = (text) => {
+    const todoIndex = todos.findIndex((todo) => todo.text === text);
+
+    const newTodos = [...todos];
+    newTodos.splice(todoIndex, 1);
+    setTodos(newTodos);
+    /* todos[todoIndex] = {
+      text: todos[todoIndex].text, 
+      completed: true,
+    } */
+  };
   return (
-    <React.Fragment>
-      <TodoCounter total={totalTodos} completed={completeTodos} />
-      {/* se le envian las dos props de useState al componente todoSerch */}
-      <TodoSearch searchValue={searchValue} setSerachValue={setSerachValue} />
-      <TodoList>
-        {searchedTodos.map((todo) => (
-          <TodoItem
-            key={todo.text}
-            text={todo.text}
-            completed={todo.completed}
-          />
-        ))}
-      </TodoList>
-      <CreateTodoButton />
-    </React.Fragment>
+    <AppUI
+      totalTodos={totalTodos}
+      completedTodos={completedTodos}
+      searchValue={searchValue}
+      setSerachValue={setSerachValue}
+      searchedTodos={searchedTodos}
+      completeTodo={completeTodo}
+      deleteTodo={deleteTodo}
+    />
   );
 }
 
